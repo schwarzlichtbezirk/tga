@@ -96,7 +96,9 @@ func encodeRGBA(w io.Writer, m *image.NRGBA, h rawHeader, attrType byte) (err er
 	}
 
 	// add extension area and footer to define attribute type
-	_, err = w.Write(newExtArea(attrType))
+	if _, err = w.Write(newExtArea(attrType)); err != nil {
+		return
+	}
 	footer := newFooter()
 	footer.ExtAreaOffset = uint32(tgaRawHeaderSize + int(h.Height)*lineSize)
 	err = binary.Write(w, binary.LittleEndian, footer)

@@ -47,7 +47,7 @@ func Decode(r io.Reader) (outImage image.Image, err error) {
 	}
 
 	// skip header
-	if _, err = tga.r.Seek(int64(tgaRawHeaderSize+tga.raw.IdLength), 0); err != nil {
+	if _, err = tga.r.Seek(int64(tgaRawHeaderSize+tga.raw.IdLength), io.SeekStart); err != nil {
 		return
 	}
 
@@ -58,7 +58,7 @@ func Decode(r io.Reader) (outImage image.Image, err error) {
 		tga.palette = make([]byte, entrySize*tga.paletteLength)
 
 		// skip to colormap
-		if _, err = tga.r.Seek(int64(entrySize)*int64(tga.raw.PaletteFirst), 1); err != nil {
+		if _, err = tga.r.Seek(int64(entrySize)*int64(tga.raw.PaletteFirst), io.SeekCurrent); err != nil {
 			return
 		}
 
@@ -110,7 +110,13 @@ func DecodeConfig(r io.Reader) (cfg image.Config, err error) {
 	return
 }
 
+// NB: becuase TGA does not play nicely with other formats, registration
+// is disabled by default. To explictly register, call
+// tga.RegisterFormat()
 func init() {
+	// image.RegisterFormat("tga", "", Decode, DecodeConfig)
+}
+func RegisterFormat() {
 	image.RegisterFormat("tga", "", Decode, DecodeConfig)
 }
 
@@ -118,7 +124,7 @@ func init() {
 func (tga *tga) applyExtensions() (err error) {
 	var rawFooter rawFooter
 
-	if _, err = tga.r.Seek(int64(-tgaRawFooterSize), 2); err != nil {
+	if _, err = tga.r.Seek(int64(-tgaRawFooterSize), io.SeekEnd); err != nil {
 		return
 	} else if err = binary.Read(tga.r, binary.LittleEndian, &rawFooter); err != nil {
 		return
@@ -128,7 +134,7 @@ func (tga *tga) applyExtensions() (err error) {
 		var n int64
 		var t byte
 
-		if n, err = tga.r.Seek(offset, 0); err != nil || n != offset {
+		if n, err = tga.r.Seek(offset, io.SeekStart); err != nil || n != offset {
 			return
 		} else if t, err = tga.r.ReadByte(); err != nil {
 			return

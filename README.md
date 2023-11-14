@@ -1,33 +1,30 @@
 # tga
 
-tga is a [Go](http://golang.org/) package for decoding and encoding TARGA image
-format.
+tga is a [Go](http://golang.org/) package for decoding and encoding TARGA image format.
 
 It supports RLE and raw TARGA images with 8/15/16/24/32 bits per pixel,
-monochrome, truecolor and colormapped images. It also correctly handles origins,
-attribute type in extensions area and successfully passes TGA 2.0 conformance
-suite (http://googlesites.inequation.org/tgautilities).
+monochrome, truecolor and colormapped images. It also correctly handles origins, attribute type in extensions area and successfully passes TGA 2.0 conformance suite (http://googlesites.inequation.org/tgautilities).
 
-Encoding an image doesn't involve conversion if it's `image.Gray`, `image.RGBA`
-or `image.NRGBA`. Other types are converted to `image.NRGBA` prior to encoding.
+Encoding an image doesn't involve conversion if it's `image.Gray`, `image.RGBA` or `image.NRGBA`. Other types are converted to `image.NRGBA` prior to encoding.
+
+> This package is fork from `github.com/ftrvxmtrx/tga`. TARGA format does not have something at file start that can be passed as *magic prefix*, and so it should be registered after all others to put format to the end of list. It can be done by `tga.RegisterFormat()` call.
 
 ## Installation
 
-    $ go get github.com/ftrvxmtrx/tga
+    $ go get github.com/schwarzlichtbezirk/tga
 
 ## Documentation and examples
 
-[tga on godoc.org](http://godoc.org/github.com/ftrvxmtrx/tga)
+[tga on godoc.org](http://godoc.org/github.com/schwarzlichtbezirk/tga)
 
 ## License
 
 Code is licensed under the MIT license (see `LICENSE.MIT`).
 
-Several sample image files in `testdata` directory are copyright to TrueVision,
-Inc. and are freely available, free of charge and under no licensing terms at
-http://googlesites.inequation.org/tgautilities
+Several sample image files in `testdata` directory are copyright to TrueVision, Inc. and are freely available, free of charge and under no licensing terms at http://googlesites.inequation.org/tgautilities
 
 These sample images (and those which were converted from them) are:
+
 ```
 bw.png
 cbw8.tga

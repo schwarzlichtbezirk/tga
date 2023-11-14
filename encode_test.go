@@ -1,11 +1,12 @@
 package tga_test
 
 import (
-	"github.com/ftrvxmtrx/tga"
 	"image"
 	"image/draw"
 	"os"
 	"testing"
+
+	"github.com/schwarzlichtbezirk/tga"
 )
 
 const dstFilename = "encode_test.tga"

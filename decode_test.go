@@ -2,13 +2,14 @@ package tga_test
 
 import (
 	"bufio"
-	_ "github.com/ftrvxmtrx/tga" // should be the first one, because TGA doesn't have any constant "header"
 	"image"
 	"image/color"
 	"os"
 	"testing"
 
 	_ "image/png"
+
+	"github.com/schwarzlichtbezirk/tga"
 )
 
 type tgaTest struct {
@@ -51,14 +52,6 @@ func decode(filename string) (image.Image, string, error) {
 	return image.Decode(bufio.NewReader(f))
 }
 
-func delta(a, b uint32) int {
-	if a < b {
-		return int(b) - int(a)
-	}
-
-	return int(a) - int(b)
-}
-
 func equal(c0, c1 color.Color) bool {
 	r0, g0, b0, a0 := c0.RGBA()
 	r1, g1, b1, a1 := c1.RGBA()
@@ -68,6 +61,10 @@ func equal(c0, c1 color.Color) bool {
 	}
 
 	return r0 == r1 && g0 == g1 && b0 == b1 && a0 == a1
+}
+
+func init() {
+	tga.RegisterFormat()
 }
 
 func TestDecode(t *testing.T) {
